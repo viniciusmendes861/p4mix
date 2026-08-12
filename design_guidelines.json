@@ -1,0 +1,40 @@
+{
+  "app_type": "marketing_site",
+  "brand_name": "p4mix",
+  "tagline": "Montagens e Eventos",
+  "theme": "dark-sophisticated-corporate",
+  "typography": {
+    "heading_font": "Cabinet Grotesk, sans-serif",
+    "body_font": "Inter, sans-serif"
+  },
+  "colors": {
+    "primary": "#E63946",
+    "secondary": "#1D3557",
+    "background": "#0F172A",
+    "surface": "#1E293B",
+    "text": "#F8FAFC",
+    "muted": "#94A3B8"
+  },
+  "image_urls": {
+    "hero_background": "https://images.unsplash.com/photo-1561019503-caec337334a4",
+    "facility_pre_assembly": "https://images.unsplash.com/photo-1584564928625-483c5be78288",
+    "scenography_project": "https://images.unsplash.com/photo-1711390811937-1b061eaf28ea",
+    "exhibition_booth": "https://images.unsplash.com/photo-1621685743771-fd5e13734ae6"
+  },
+  "sections": [
+    "header",
+    "hero",
+    "about",
+    "services_products",
+    "expertise",
+    "differentiators",
+    "facility",
+    "contact",
+    "footer"
+  ],
+  "accessibility": {
+    "apca_contrast_compliant": true,
+    "aria_labels_required": true,
+    "data_testid_required": true
+  }
+}
