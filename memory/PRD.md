@@ -1,41 +1,37 @@
-# P4mix Institutional Website PRD
+# P4mix Institutional Website — PRD
 
 ## Original Problem Statement
-Create a modern, professional, responsive institutional website for the company described in the uploaded PDF APRESENTAÇÃO P4MIX.pdf. Treat the PDF as the primary source of truth, use only supported company information, and present the company, history, services/products, expertise, differentiators, portfolio, contact details, and visual identity in a polished corporate showcase. The website should be responsive, accessible, maintainable, SEO-friendly, and functional as a clear company presentation rather than e-commerce.
+Build a modern, professional, responsive institutional website for P4mix based on the PDF "APRESENTAÇÃO P4MIX.pdf" as the single source of truth: company showcase covering history, services, expertise, differentiators, values, and contact. Site copy in Portuguese (pt-BR); professional corporate identity extracted from the PDF branding.
 
-## User Choices
-- Contact area uses contact details only; no message form.
-- PDF is the source of truth.
+## Architecture
+- React frontend (single-page landing) + FastAPI backend + MongoDB.
+- Frontend: `/app/frontend/src/App.js` (sections), `/app/frontend/src/components/ProjectAssistant.jsx` (AI chat widget), styles in `/app/frontend/src/App.css`.
+- Backend: `/app/backend/server.py` — health check, status endpoints, and `POST /api/chat` (SSE streaming assistant).
+- AI: Claude Sonnet 5 (anthropic) via `emergentintegrations` + `EMERGENT_LLM_KEY` (universal key in `/app/backend/.env`).
 
-## Architecture Decisions
-- Frontend: React 19 single-page institutional marketing site.
-- Styling: modular semantic sections in App.js with responsive App.css and global index.css.
-- Content: static, sourced from the PDF; no backend data dependency needed for this showcase.
-- Navigation: anchored one-page navigation with a responsive mobile menu.
-- Imagery: professional event/exhibition imagery from the generated design direction, used as decorative portfolio/facility visuals.
-- Backend: starter FastAPI health endpoint remains intact; no new API or database model was required.
+## User Personas
+- Marketing/event managers researching stand & scenography vendors for fairs and activations.
+- Brand owners wanting a quick, trustworthy overview and an easy first contact.
+
+## Core Requirements (static)
+- PDF is the single source of truth; no invented facts, stats, or contacts.
+- Clean, modern, responsive corporate design; Portuguese copy.
+- Sections: header/nav, hero, about, services, expertise, projects, facility, contact, footer.
 
 ## Implemented
-- P4mix-branded dark, lime, and neutral visual identity with Space Grotesk / DM Sans typography.
-- Responsive header, desktop navigation, mobile menu, and CTA links.
-- Hero section with value proposition, 15+ years experience, São Paulo location, and CTA.
-- About section with 1,000 m² facility, qualified team, quality materials, positioning, and supported values.
-- Solutions grid for stands, project design, scenography, displays/kiosks, conventions, and efficient assembly.
-- Expertise section and supported differentiators.
-- Visual project mosaic and facility/pre-assembly section.
-- Contact details for phone, email, website, and Instagram only.
-- Professional footer, document title, language metadata, and meta description.
-- Unique descriptive data-testid attributes across critical content and interactive elements.
-- Verified production build, live browser flow, responsive mobile menu, exact contact links, image loading, and backend health.
+- 2026-07: Full landing page (hero, intro strip, about, 6 service cards, expertise list, project mosaic, 1.000 m² facility section, contact, footer) with dark-sophisticated corporate identity + lime accent; mobile/tablet/desktop responsive; data-testids throughout.
+- 2026-07: "Assistente de projeto" — floating AI chat widget (Claude Sonnet 5, Emergent LLM key) that interviews visitors in Portuguese to structure a project brief (event type, size, deadline) and routes them to P4mix contact channels. Backend streams replies via SSE; chat history persisted to MongoDB (`chat_messages` collection).
 
-## Prioritized Backlog
-### P0
-- Keep PDF-derived content reviewed by the business owner before publishing any new claim.
+## Verified
+- `POST /api/chat` streams token-by-token (SSE), multi-turn context retained (tested with Expo Center Norte / 50 m² scenario), replies in pt-BR.
+- Widget open/close, send, streamed rendering verified via browser screenshot.
 
-### P1
-- Add real project images and project names from a confirmed P4mix portfolio source if the company supplies them.
-- Add a verified street address and business hours if P4mix provides those details.
+## Backlog
+- P0: none
+- P1: Business hours section when P4mix provides them
+- P2: Browsable project gallery filtered by service
+- P2: Privacy-friendly lead/contact-link engagement tracking
 
-### P2
-- Add a lightweight project filtering/gallery interaction once a confirmed portfolio catalog exists.
-- Add analytics or conversion tracking after the desired business goals are defined.
+## Next Tasks
+1. Collect business hours from the user and add to contact section.
+2. Expand project showcase into filterable gallery (needs real project images).

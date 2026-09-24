@@ -16,6 +16,7 @@ import {
   UsersRound,
   X,
 } from "lucide-react";
+import { ProjectAssistant } from "@/components/ProjectAssistant";
 import "@/App.css";
 
 const images = {
@@ -272,6 +273,7 @@ function App() {
         </div>
         <div className="container footer-bottom"><span data-testid="footer-copyright">© {new Date().getFullYear()} P4mix. Montagens e Eventos.</span><span data-testid="footer-location">São Paulo · Brasil</span></div>
       </footer>
+      <ProjectAssistant />
     </main>
   );
 }
