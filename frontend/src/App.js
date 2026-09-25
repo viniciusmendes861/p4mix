@@ -24,11 +24,15 @@ const images = {
     "https://images.unsplash.com/photo-1561019503-caec337334a4?auto=format&fit=crop&w=1800&q=85",
   facility:
     "https://images.unsplash.com/photo-1584564928625-483c5be78288?auto=format&fit=crop&w=1200&q=85",
-  scenography:
-    "https://images.unsplash.com/photo-1711390811937-1b061eaf28ea?auto=format&fit=crop&w=1000&q=85",
-  booth:
-    "https://images.unsplash.com/photo-1621685743771-fd5e13734ae6?auto=format&fit=crop&w=1000&q=85",
+  projectMain: "/projects/baloes-sao-roque-5.jpg",
+  projectSecondary: "/projects/baloes-sao-roque-4.jpg",
 };
+
+const projectGallery = [
+  { src: "/projects/baloes-sao-roque-1.jpg", alt: "Estande Balões São Roque com balcão de atendimento e mesas de apoio" },
+  { src: "/projects/baloes-sao-roque-2.jpg", alt: "Vista lateral do estande Balões São Roque com letreiro curvo" },
+  { src: "/projects/baloes-sao-roque-3.jpg", alt: "Cenografia com colunas e esculturas de balões no estande" },
+];
 
 const services = [
   {
@@ -232,9 +236,16 @@ function App() {
             <p data-testid="projects-intro">Cada projeto é uma oportunidade de tornar a sua marca mais próxima, mais visível e mais memorável.</p>
           </div>
           <div className="project-mosaic" data-testid="project-mosaic">
-            <figure className="project-image project-large"><img src={images.booth} alt="Estante promocional em um ambiente de evento" data-testid="project-image-booth" /><figcaption><span>01</span> Estandes promocionais</figcaption></figure>
-            <figure className="project-image project-small"><img src={images.scenography} alt="Cenografia de evento com iluminação" data-testid="project-image-scenography" /><figcaption><span>02</span> Cenografias</figcaption></figure>
+            <figure className="project-image project-large"><img src={images.projectMain} alt="Estande Balões São Roque montado em pavilhão de feira" data-testid="project-image-main" /><figcaption><span>01</span> Estande Balões São Roque</figcaption></figure>
+            <figure className="project-image project-small"><img src={images.projectSecondary} alt="Cenografia com escultura de balões e letreiro de neon no estande" data-testid="project-image-secondary" /><figcaption><span>02</span> Cenografia com balões</figcaption></figure>
             <div className="project-statement" data-testid="project-statement"><Sparkles size={21} /><p>Espaços que<br /><strong>fazem sentido.</strong></p></div>
+          </div>
+          <div className="project-strip" data-testid="project-gallery">
+            {projectGallery.map((photo, index) => (
+              <figure className="project-image project-strip-item" key={photo.src}>
+                <img src={photo.src} alt={photo.alt} loading="lazy" data-testid={`project-gallery-image-${index + 1}`} />
+              </figure>
+            ))}
           </div>
         </div>
       </section>
