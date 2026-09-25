@@ -25,9 +25,9 @@ Build a modern, professional, responsive institutional website for P4mix based o
 - Assistant chat streams pt-BR with multi-turn context.
 
 ## Pending / Blocked
-- P0: Hero background — owner wants the Medlevesohn mezzanine photo; NOT YET SENT. Currently using real Balões São Roque photo as interim.
 - P1: Business hours when provided.
 - P2: Filterable project gallery page; lead/engagement tracking.
+- Done 2026-07: hero background now uses the real MedLevensohn mezzanine photo (`/projects/medlevensohn-mezanino.jpg`).
 
 ## Credentials
 - See `/app/memory/test_credentials.md` — admin password for gallery: P4mix@galeria2026

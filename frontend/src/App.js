@@ -25,7 +25,7 @@ import "@/App.css";
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const images = {
-  hero: "/projects/baloes-sao-roque-5.jpg",
+  hero: "/projects/medlevensohn-mezanino.jpg",
   facility:
     "https://images.unsplash.com/photo-1584564928625-483c5be78288?auto=format&fit=crop&w=1200&q=85",
   projectMain: "/projects/baloes-sao-roque-5.jpg",
