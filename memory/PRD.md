@@ -1,37 +1,33 @@
 # P4mix Institutional Website — PRD
 
 ## Original Problem Statement
-Build a modern, professional, responsive institutional website for P4mix based on the PDF "APRESENTAÇÃO P4MIX.pdf" as the single source of truth: company showcase covering history, services, expertise, differentiators, values, and contact. Site copy in Portuguese (pt-BR); professional corporate identity extracted from the PDF branding.
+Build a modern, professional, responsive institutional website for P4mix based on the PDF "APRESENTAÇÃO P4MIX.pdf" as the single source of truth. Site copy in Portuguese (pt-BR); corporate identity from the PDF branding. Content updates are provided directly by the owner via chat.
 
 ## Architecture
-- React frontend (single-page landing) + FastAPI backend + MongoDB.
-- Frontend: `/app/frontend/src/App.js` (sections), `/app/frontend/src/components/ProjectAssistant.jsx` (AI chat widget), styles in `/app/frontend/src/App.css`.
-- Backend: `/app/backend/server.py` — health check, status endpoints, and `POST /api/chat` (SSE streaming assistant).
-- AI: Claude Sonnet 5 (anthropic) via `emergentintegrations` + `EMERGENT_LLM_KEY` (universal key in `/app/backend/.env`).
+- React frontend (single-page) + FastAPI backend + MongoDB + Emergent object storage.
+- Frontend: `/app/frontend/src/App.js` (all sections + motion), `/app/frontend/src/components/ProjectAssistant.jsx` (AI chat), `/app/frontend/src/components/AdminPanel.jsx` (gallery admin), styles in `/app/frontend/src/App.css`.
+- Backend `/app/backend/server.py`: health, `POST /api/chat` (SSE, Claude Sonnet 5 via Emergent LLM key), `POST /api/admin/login` (env-password + JWT), `GET /api/gallery`, `POST /api/gallery/upload`, `DELETE /api/gallery/{id}` (soft delete), `GET /api/files/{path}` (serves from object storage).
+- Assets: official logo extracted from PDF → `/app/frontend/public/logo-white.png`; project photos in `/app/frontend/public/projects/*.jpg`; favicon `/app/frontend/public/favicon.svg`.
 
 ## User Personas
-- Marketing/event managers researching stand & scenography vendors for fairs and activations.
-- Brand owners wanting a quick, trustworthy overview and an easy first contact.
+- Marketing/event managers evaluating stand & scenography vendors.
+- The P4mix owner, who manages gallery photos himself via the admin area.
 
-## Core Requirements (static)
-- PDF is the single source of truth; no invented facts, stats, or contacts.
-- Clean, modern, responsive corporate design; Portuguese copy.
-- Sections: header/nav, hero, about, services, expertise, projects, facility, contact, footer.
-
-## Implemented
-- 2026-07: Full landing page (hero, intro strip, about, 6 service cards, expertise list, project mosaic, 1.000 m² facility section, contact, footer) with dark-sophisticated corporate identity + lime accent; mobile/tablet/desktop responsive; data-testids throughout.
-- 2026-07: "Assistente de projeto" — floating AI chat widget (Claude Sonnet 5, Emergent LLM key) that interviews visitors in Portuguese to structure a project brief (event type, size, deadline) and routes them to P4mix contact channels. Backend streams replies via SSE; chat history persisted to MongoDB (`chat_messages` collection).
+## Implemented (2026-07)
+- Full landing page: kinetic hero (masked line reveal + parallax), editorial marquee, intro, about with 4 highlights (Desde 2006, 40+ marcas, equipe própria, atuação nacional), 6 services with taglines, 7-step process section, projects with real Balões São Roque photos, facility (1.000 m²), 7 values grid, contact with WhatsApp (11) 94418-0189, footer with official logo + Admin link.
+- Motion system: framer-motion scroll reveals, Lenis smooth scrolling, hero parallax.
+- AI "Assistente de projeto" (Claude Sonnet 5, streaming, pt-BR, WhatsApp-aware).
+- Admin gallery: password gate (`#admin`), multi-image upload to object storage, soft-delete; public strip shows uploads, falls back to local Balões São Roque photos.
 
 ## Verified
-- `POST /api/chat` streams token-by-token (SSE), multi-turn context retained (tested with Expo Center Norte / 50 m² scenario), replies in pt-BR.
-- Widget open/close, send, streamed rendering verified via browser screenshot.
+- Admin API chain: 401 on wrong password, login, upload, serve (200 image/jpeg), list, delete.
+- Hero marquee/process/projects/values/contact render on desktop; hero fits at 375px; admin login + panel flow in browser.
+- Assistant chat streams pt-BR with multi-turn context.
 
-## Backlog
-- P0: none
-- P1: Business hours section when P4mix provides them
-- P2: Browsable project gallery filtered by service
-- P2: Privacy-friendly lead/contact-link engagement tracking
+## Pending / Blocked
+- P0: Hero background — owner wants the Medlevesohn mezzanine photo; NOT YET SENT. Currently using real Balões São Roque photo as interim.
+- P1: Business hours when provided.
+- P2: Filterable project gallery page; lead/engagement tracking.
 
-## Next Tasks
-1. Collect business hours from the user and add to contact section.
-2. Expand project showcase into filterable gallery (needs real project images).
+## Credentials
+- See `/app/memory/test_credentials.md` — admin password for gallery: P4mix@galeria2026

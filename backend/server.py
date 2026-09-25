@@ -71,20 +71,21 @@ async def get_status_checks():
     return status_checks
 
 
-ASSISTANT_SYSTEM_PROMPT = """Você é o assistente de projetos da P4mix, empresa brasileira de arquitetura promocional, montagens e eventos, localizada na Zona Norte de São Paulo.
+ASSISTANT_SYSTEM_PROMPT = """Você é o assistente de projetos da P4MIX, empresa brasileira de arquitetura promocional — montagens e eventos — localizada na Zona Norte de São Paulo e com atuação nacional.
 
-Sobre a P4mix:
-- Mais de 15 anos de experiência em estandes promocionais, cenografias, displays, quiosques promocionais e convenções.
-- Estrutura própria de 1.000 m² que permite pré-montar e ajustar os projetos antes do evento.
-- Valores: pontualidade, excelência, suporte e confiança.
-- Contato: telefone (11) 31966-5957, e-mail contato@p4mix.com.br, Instagram @p4mix, site www.p4mix.com.br.
+Sobre a P4MIX:
+- Desde 2006, desenvolve, produz e monta estandes, cenografias, quiosques, eventos corporativos, projetos especiais e soluções sob medida.
+- Mais de 40 marcas atendidas, equipe própria do projeto à execução e estrutura própria de 1.000 m² para pré-montagem.
+- Processo de trabalho: briefing, projeto, apresentação e aprovação, produção, pré-montagem, montagem e entrega, desmontagem.
+- Valores: pontualidade, excelência, experiência, suporte, confiança, equipe própria e atendimento próximo.
+- Contato: telefone (11) 31966-5957, WhatsApp (11) 94418-0189, e-mail contato@p4mix.com.br, Instagram @p4mix, site www.p4mix.com.br.
 
 Seu papel:
 - Converse SEMPRE em português brasileiro, com tom profissional, cordial e objetivo.
-- Ajude o visitante a estruturar um briefing do projeto: tipo de evento ou ativação, serviço desejado (estande, cenografia, display, quiosque, convenção), tamanho aproximado, cidade/local, prazo e data do evento.
+- Ajude o visitante a estruturar um briefing do projeto: tipo de evento ou ativação, serviço desejado (estande, cenografia, quiosque, evento corporativo, projeto especial), tamanho aproximado, cidade/local, prazo e data do evento.
 - Faça no máximo 2 perguntas por vez e mantenha respostas curtas (até 4 frases).
-- Não informe preços, prazos de entrega específicos nem invente clientes ou cases; quando o assunto exigir um orçamento, oriente o visitante a falar com a equipe pelos canais de contato acima.
-- Quando o briefing estiver claro, resuma os pontos levantados e convide o visitante a enviar pelo e-mail ou ligar para a P4mix."""
+- Não informe preços, prazos de entrega específicos nem invente clientes ou cases; quando o assunto exigir um orçamento, oriente o visitante a falar com a equipe pelos canais de contato acima (o WhatsApp costuma ser o caminho mais rápido).
+- Quando o briefing estiver claro, resuma os pontos levantados e convide o visitante a enviar pelo WhatsApp ou e-mail para a P4MIX."""
 
 
 class ChatRequest(BaseModel):
@@ -142,6 +143,137 @@ async def chat(request: ChatRequest):
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+# --- Object storage + admin gallery ---
+import hmac
+import requests
+import jwt
+from datetime import timedelta
+from fastapi import Request, Response, HTTPException, UploadFile, File
+
+STORAGE_BASE = (os.environ.get("INTEGRATION_PROXY_URL") or "").strip() or "https://integrations.emergentagent.com"
+STORAGE_URL = STORAGE_BASE.rstrip("/") + "/objstore/api/v1/storage"
+APP_NAME = "p4mix-site"
+storage_key = None
+
+
+def init_storage(force: bool = False):
+    global storage_key
+    if storage_key and not force:
+        return storage_key
+    resp = requests.post(f"{STORAGE_URL}/init", json={"emergent_key": os.environ.get("EMERGENT_LLM_KEY")}, timeout=30)
+    resp.raise_for_status()
+    storage_key = resp.json()["storage_key"]
+    return storage_key
+
+
+def put_object(path: str, data: bytes, content_type: str) -> dict:
+    resp = requests.put(
+        f"{STORAGE_URL}/objects/{path}",
+        headers={"X-Storage-Key": init_storage(), "Content-Type": content_type},
+        data=data, timeout=120,
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+
+def get_object(path: str):
+    resp = requests.get(f"{STORAGE_URL}/objects/{path}", headers={"X-Storage-Key": init_storage()}, timeout=60)
+    resp.raise_for_status()
+    return resp.content, resp.headers.get("Content-Type", "application/octet-stream")
+
+
+@app.on_event("startup")
+async def startup_storage():
+    try:
+        init_storage()
+        logger.info("Object storage initialized")
+    except Exception:
+        logger.exception("Storage init failed")
+
+
+class AdminLogin(BaseModel):
+    password: str
+
+
+def require_admin(request: Request):
+    auth = request.headers.get("Authorization", "")
+    token = auth[7:] if auth.startswith("Bearer ") else ""
+    if not token:
+        raise HTTPException(status_code=401, detail="Não autenticado")
+    try:
+        payload = jwt.decode(token, os.environ["JWT_SECRET"], algorithms=["HS256"])
+        if payload.get("role") != "admin":
+            raise HTTPException(status_code=401, detail="Não autenticado")
+        return payload
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=401, detail="Sessão inválida ou expirada")
+
+
+@api_router.post("/admin/login")
+async def admin_login(body: AdminLogin):
+    expected = os.environ.get("ADMIN_PASSWORD", "")
+    if not expected or not hmac.compare_digest(body.password, expected):
+        raise HTTPException(status_code=401, detail="Senha incorreta")
+    token = jwt.encode(
+        {"sub": "admin", "role": "admin", "exp": datetime.now(timezone.utc) + timedelta(hours=12)},
+        os.environ["JWT_SECRET"], algorithm="HS256",
+    )
+    return {"token": token}
+
+
+@api_router.get("/gallery")
+async def list_gallery():
+    docs = await db.gallery.find({"is_deleted": False}, {"_id": 0}).sort("created_at", 1).to_list(200)
+    for doc in docs:
+        doc["url"] = f"/api/files/{doc['storage_path']}"
+    return {"images": docs}
+
+
+@api_router.post("/gallery/upload")
+async def upload_gallery_image(request: Request, file: UploadFile = File(...)):
+    require_admin(request)
+    content_type = file.content_type or "application/octet-stream"
+    if not content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="Envie apenas arquivos de imagem")
+    data = await file.read()
+    if not data:
+        raise HTTPException(status_code=400, detail="Arquivo vazio")
+    if len(data) > 10 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="Imagem maior que 10 MB")
+    ext = (file.filename or "").rsplit(".", 1)[-1].lower() if "." in (file.filename or "") else "jpg"
+    path = f"{APP_NAME}/gallery/{uuid.uuid4()}.{ext}"
+    result = put_object(path, data, content_type)
+    doc = {
+        "id": str(uuid.uuid4()),
+        "storage_path": result["path"],
+        "original_filename": file.filename,
+        "content_type": content_type,
+        "size": result["size"],
+        "is_deleted": False,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.gallery.insert_one(doc)
+    return {"id": doc["id"], "url": f"/api/files/{doc['storage_path']}", "original_filename": doc["original_filename"]}
+
+
+@api_router.delete("/gallery/{image_id}")
+async def delete_gallery_image(image_id: str, request: Request):
+    require_admin(request)
+    result = await db.gallery.update_one({"id": image_id}, {"$set": {"is_deleted": True}})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Imagem não encontrada")
+    return {"deleted": True}
+
+
+@api_router.get("/files/{path:path}")
+async def serve_file(path: str):
+    record = await db.gallery.find_one({"storage_path": path, "is_deleted": False})
+    if not record:
+        raise HTTPException(status_code=404, detail="Arquivo não encontrado")
+    data, content_type = get_object(path)
+    return Response(content=data, media_type=record.get("content_type") or content_type)
 
 
 # Include the router in the main app
