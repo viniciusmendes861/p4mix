@@ -230,6 +230,7 @@ function App() {
   const [galleryImages, setGalleryImages] = useState(null);
   const [safraIndex, setSafraIndex] = useState(0);
   const [mirandinhaIndex, setMirandinhaIndex] = useState(0);
+  const [medlevIndex, setMedlevIndex] = useState(0);
   const { scrollY } = useScroll();
   const heroImageY = useTransform(scrollY, [0, 900], [0, 170]);
 
@@ -476,20 +477,16 @@ function App() {
             </div>
           </Reveal>
           <Reveal delay={0.1}>
-            <div className="strip-caption" data-testid="project-caption-medlev">
-              <span>03</span>
-              <div className="project-caption-info project-caption-dark">
-                <strong>MedLevensohn</strong>
-                <small>Hospitalar 2026 · 102 m² · São Paulo Expo</small>
-              </div>
-            </div>
-            <div className="project-strip" data-testid="project-gallery">
-              {medlevPhotos.map((photo, index) => (
-                <figure className="project-image project-strip-item project-real" key={photo.src}>
-                  <img src={photo.src} alt={photo.alt} loading="lazy" data-testid={`project-gallery-image-${index + 1}`} />
-                </figure>
-              ))}
-            </div>
+            <ProjectCarousel
+              photos={medlevPhotos}
+              index={medlevIndex}
+              onChange={setMedlevIndex}
+              number="03"
+              title="MedLevensohn"
+              subtitle="Hospitalar 2026 · 102 m² · São Paulo Expo"
+              sizeClass="project-large project-strip-feature"
+              testId="project-carousel-medlev"
+            />
           </Reveal>
           {galleryImages && galleryImages.length > 0 && (
             <Reveal delay={0.15}>

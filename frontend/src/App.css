@@ -174,3 +174,4 @@ h1, h2, h3, p { margin-top: 0; }.hero h1 { max-width: 760px; margin-bottom: 25px
 .project-caption-dark strong { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 600; letter-spacing: -.03em; }
 .project-caption-dark small { color: #697068; font-size: 11px; }
 .project-real img { filter: none; }
+.project-strip-feature { width: 100%; margin-top: 24px; }
