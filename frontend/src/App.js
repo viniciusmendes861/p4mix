@@ -53,6 +53,14 @@ const medlevPhotos = [
   { src: "/projects/medlev-6.jpg", alt: "Estande MedLevensohn — sala interna com identidade da marca" },
 ];
 
+const tradestarPhotos = [
+  { src: "/projects/tradestar-1.jpg", alt: "Estande TradeStar — vista geral com letreiro suspenso e parede de ferramentas" },
+  { src: "/projects/tradestar-2.png", alt: "Estande TradeStar — lateral com exposição de produtos e iluminação amarela" },
+  { src: "/projects/tradestar-3.png", alt: "Estande TradeStar — painel de ferramentas e área de atendimento" },
+  { src: "/projects/tradestar-4.png", alt: "Estande TradeStar — vista externa em ângulo" },
+  { src: "/projects/tradestar-5.jpg", alt: "Estande TradeStar — parede verde com logo da marca" },
+];
+
 const projectGallery = [
   { src: "/projects/baloes-sao-roque-1.jpg", alt: "Estande Balões São Roque com balcão de atendimento e mesas de apoio" },
   { src: "/projects/baloes-sao-roque-2.jpg", alt: "Vista lateral do estande Balões São Roque com letreiro curvo" },
@@ -231,6 +239,7 @@ function App() {
   const [safraIndex, setSafraIndex] = useState(0);
   const [mirandinhaIndex, setMirandinhaIndex] = useState(0);
   const [medlevIndex, setMedlevIndex] = useState(0);
+  const [tradestarIndex, setTradestarIndex] = useState(0);
   const { scrollY } = useScroll();
   const heroImageY = useTransform(scrollY, [0, 900], [0, 170]);
 
@@ -486,6 +495,18 @@ function App() {
               subtitle="Hospitalar 2026 · 102 m² · São Paulo Expo"
               sizeClass="project-large project-strip-feature"
               testId="project-carousel-medlev"
+            />
+          </Reveal>
+          <Reveal delay={0.12}>
+            <ProjectCarousel
+              photos={tradestarPhotos}
+              index={tradestarIndex}
+              onChange={setTradestarIndex}
+              number="04"
+              title="TradeStar"
+              subtitle="FEICON 2026 · 60 m² · São Paulo Expo"
+              sizeClass="project-large project-strip-feature"
+              testId="project-carousel-tradestar"
             />
           </Reveal>
           {galleryImages && galleryImages.length > 0 && (
