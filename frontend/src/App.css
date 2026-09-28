@@ -133,3 +133,19 @@ h1, h2, h3, p { margin-top: 0; }.hero h1 { max-width: 760px; margin-bottom: 25px
 .facility-values { padding: 85px 0 110px; }
 .facility-values .values-grid { margin-top: 44px; }
 @media (max-width: 850px) { .facility-top { grid-template-columns: 1fr; } .facility-values { padding: 60px 0 85px; } }
+
+.brand-logo { height: 56px; }
+.about-heading h2 { font-size: clamp(3.1rem, 5.6vw, 5.6rem); }
+.large-copy { font-size: clamp(1.85rem, 2.8vw, 2.5rem) !important; }
+.about-body > p:not(.large-copy) { font-size: 15px; }
+.highlight strong { font-size: 25px; }
+.highlight span { font-size: 11px; }
+.solutions-section .section-heading-row { align-items: center; }
+.solutions-section .section-heading-row > div:last-child { max-width: 330px; }
+.projects-heading { align-items: flex-start; }
+.projects-heading > div:last-child { max-width: 330px; padding-top: 44px; }
+.process-item p { font-size: 13.2px; }
+.facility-content h2 span { color: #669100; }
+.admin-brand-logo { display: block; height: 46px; width: auto; }
+@media (max-width: 850px) { .projects-heading > div:last-child { padding-top: 0; } .brand-logo { height: 46px; } }
+@media (max-width: 520px) { .about-heading h2 { font-size: 2.7rem; } }

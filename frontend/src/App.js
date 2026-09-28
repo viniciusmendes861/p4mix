@@ -141,7 +141,7 @@ const contactLines = [
 ];
 
 function Logo({ testId }) {
-  return <img src="/logo-white.png" alt="P4mix — Montagens e Eventos" className="brand-logo" data-testid={testId} />;
+  return <img src="/logo-oficial.png" alt="P4MIX — Arquitetura Promocional" className="brand-logo" data-testid={testId} />;
 }
 
 function SectionEyebrow({ children, light = false, testId }) {

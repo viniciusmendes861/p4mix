@@ -109,10 +109,7 @@ export function AdminPanel() {
     return (
       <main className="admin-shell" data-testid="admin-login-view">
         <form className="admin-card" onSubmit={login} data-testid="admin-login-form">
-          <span className="admin-brand">
-            <span className="brand-p4">p4</span>
-            <span className="brand-mix">mix</span>
-          </span>
+          <img src="/logo-oficial.png" alt="P4MIX — Arquitetura Promocional" className="admin-brand-logo" />
           <h1 className="admin-title">Área restrita</h1>
           <p className="admin-subtitle">Gerencie as fotos da galeria de projetos do site.</p>
           <label className="admin-label" htmlFor="admin-password">
