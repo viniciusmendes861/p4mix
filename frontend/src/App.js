@@ -29,13 +29,19 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const images = {
   hero: "/projects/medlevensohn-mezanino.jpg",
   facility: "/projects/servtherm-estande.jpg",
-  projectSecondary: "/projects/baloes-sao-roque-4.jpg",
 };
 
 const safraPhotos = [
   { src: "/projects/safra-1.png", alt: "Estande Banco Safra — vista frontal com parede verde e totem ripado" },
   { src: "/projects/safra-2.png", alt: "Estande Banco Safra — parede verde com logo e área de atendimento" },
   { src: "/projects/safra-3.png", alt: "Estande Banco Safra — totem ripado com brasão e mesa de reunião" },
+];
+
+const mirandinhaPhotos = [
+  { src: "/projects/mirandinha-1.png", alt: "Estande Grupo Mirandinha — coração iluminado e prateleiras de produtos" },
+  { src: "/projects/mirandinha-2.png", alt: "Estande Grupo Mirandinha — fachada com engrenagens coloridas e letreiro" },
+  { src: "/projects/mirandinha-3.png", alt: "Estande Grupo Mirandinha — vista lateral com coração e vitrines" },
+  { src: "/projects/mirandinha-4.png", alt: "Estande Grupo Mirandinha — totem Fábrica de Celebrações" },
 ];
 
 const projectGallery = [
@@ -186,6 +192,27 @@ function Marquee() {
   );
 }
 
+function ProjectCarousel({ photos, index, onChange, number, title, subtitle, sizeClass, testId }) {
+  const active = photos[index];
+  return (
+    <figure className={`project-image ${sizeClass} project-carousel`} data-testid={testId}>
+      <img key={index} src={active.src} alt={active.alt} data-testid={`${testId}-image`} />
+      <button type="button" className="carousel-nav carousel-prev" onClick={() => onChange((index - 1 + photos.length) % photos.length)} aria-label="Foto anterior do projeto" data-testid={`${testId}-prev-button`}>
+        <ChevronLeft size={18} />
+      </button>
+      <button type="button" className="carousel-nav carousel-next" onClick={() => onChange((index + 1) % photos.length)} aria-label="Próxima foto do projeto" data-testid={`${testId}-next-button`}>
+        <ChevronRight size={18} />
+      </button>
+      <div className="carousel-dots" data-testid={`${testId}-dots`}>
+        {photos.map((photo, dotIndex) => (
+          <button key={photo.src} type="button" className={`carousel-dot ${dotIndex === index ? "carousel-dot-active" : ""}`} onClick={() => onChange(dotIndex)} aria-label={`Ver foto ${dotIndex + 1} do projeto`} data-testid={`${testId}-dot-${dotIndex + 1}`} />
+        ))}
+      </div>
+      <figcaption><span>{number}</span><div className="project-caption-info"><strong>{title}</strong><small>{subtitle}</small></div></figcaption>
+    </figure>
+  );
+}
+
 const heroLineTransition = (delay) => ({ duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] });
 
 function App() {
@@ -193,6 +220,7 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(() => window.location.hash === "#admin");
   const [galleryImages, setGalleryImages] = useState(null);
   const [safraIndex, setSafraIndex] = useState(0);
+  const [mirandinhaIndex, setMirandinhaIndex] = useState(0);
   const { scrollY } = useScroll();
   const heroImageY = useTransform(scrollY, [0, 900], [0, 170]);
 
@@ -248,8 +276,6 @@ function App() {
   const stripImages = galleryImages && galleryImages.length > 0
     ? galleryImages.map((image) => ({ src: `${BACKEND_URL}${image.url}`, alt: image.original_filename || "Projeto P4MIX" }))
     : projectGallery;
-
-  const activeSafra = safraPhotos[safraIndex];
 
   return (
     <main className="site-shell" data-testid="p4mix-institutional-site">
@@ -417,22 +443,26 @@ function App() {
           </div>
           <Reveal>
             <div className="project-mosaic" data-testid="project-mosaic">
-              <figure className="project-image project-large project-carousel" data-testid="project-carousel-safra">
-                <img key={safraIndex} src={activeSafra.src} alt={activeSafra.alt} data-testid="project-image-main" />
-                <button type="button" className="carousel-nav carousel-prev" onClick={() => setSafraIndex((index) => (index - 1 + safraPhotos.length) % safraPhotos.length)} aria-label="Foto anterior do projeto" data-testid="carousel-prev-button">
-                  <ChevronLeft size={18} />
-                </button>
-                <button type="button" className="carousel-nav carousel-next" onClick={() => setSafraIndex((index) => (index + 1) % safraPhotos.length)} aria-label="Próxima foto do projeto" data-testid="carousel-next-button">
-                  <ChevronRight size={18} />
-                </button>
-                <div className="carousel-dots" data-testid="carousel-dots">
-                  {safraPhotos.map((photo, index) => (
-                    <button key={photo.src} type="button" className={`carousel-dot ${index === safraIndex ? "carousel-dot-active" : ""}`} onClick={() => setSafraIndex(index)} aria-label={`Ver foto ${index + 1} do projeto`} data-testid={`carousel-dot-${index + 1}`} />
-                  ))}
-                </div>
-                <figcaption><span>01</span><div className="project-caption-info"><strong>Banco Safra</strong><small>Congresso Brasileiro de Previdência Privada · 2022</small></div></figcaption>
-              </figure>
-              <figure className="project-image project-small"><img src={images.projectSecondary} alt="Cenografia com escultura de balões e letreiro de neon no estande" data-testid="project-image-secondary" /><figcaption><span>02</span> Cenografia com balões</figcaption></figure>
+              <ProjectCarousel
+                photos={safraPhotos}
+                index={safraIndex}
+                onChange={setSafraIndex}
+                number="01"
+                title="Banco Safra"
+                subtitle="Congresso Brasileiro de Previdência Privada · 2022"
+                sizeClass="project-large"
+                testId="project-carousel-safra"
+              />
+              <ProjectCarousel
+                photos={mirandinhaPhotos}
+                index={mirandinhaIndex}
+                onChange={setMirandinhaIndex}
+                number="02"
+                title="Grupo Mirandinha"
+                subtitle="Celebra Show 2026 · 104,5 m² · Expo Center Norte"
+                sizeClass="project-small"
+                testId="project-carousel-mirandinha"
+              />
               <div className="project-statement" data-testid="project-statement"><Sparkles size={21} /><p>Projetos pensados para <strong>fazer a marca acontecer.</strong></p></div>
             </div>
           </Reveal>
