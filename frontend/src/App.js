@@ -53,6 +53,12 @@ const medlevPhotos = [
   { src: "/projects/medlev-6.jpg", alt: "Estande MedLevensohn — sala interna com identidade da marca" },
 ];
 
+const techgeoPhotos = [
+  { src: "/projects/techgeo-1.png", alt: "Estande TechGeo — vista geral com balcão iluminado e letreiros neon" },
+  { src: "/projects/techgeo-2.png", alt: "Estande TechGeo — estrutura superior com tubos de neon laranja" },
+  { src: "/projects/techgeo-3.png", alt: "Estande TechGeo — vista em ângulo com piso colorido e exposição de produtos" },
+];
+
 const tradestarPhotos = [
   { src: "/projects/tradestar-1.jpg", alt: "Estande TradeStar — vista geral com letreiro suspenso e parede de ferramentas" },
   { src: "/projects/tradestar-2.png", alt: "Estande TradeStar — lateral com exposição de produtos e iluminação amarela" },
