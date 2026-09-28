@@ -26,7 +26,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const images = {
   hero: "/projects/medlevensohn-mezanino.jpg",
-  facility: "/projects/baloes-sao-roque-1.jpg",
+  facility: "/projects/servtherm-estande.jpg",
   projectMain: "/projects/baloes-sao-roque-5.jpg",
   projectSecondary: "/projects/baloes-sao-roque-4.jpg",
 };
