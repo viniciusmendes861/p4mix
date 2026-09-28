@@ -26,8 +26,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const images = {
   hero: "/projects/medlevensohn-mezanino.jpg",
-  facility:
-    "https://images.unsplash.com/photo-1584564928625-483c5be78288?auto=format&fit=crop&w=1200&q=85",
+  facility: "/projects/baloes-sao-roque-1.jpg",
   projectMain: "/projects/baloes-sao-roque-5.jpg",
   projectSecondary: "/projects/baloes-sao-roque-4.jpg",
 };
@@ -319,10 +318,6 @@ function App() {
               <SectionEyebrow testId="about-eyebrow">Sobre nós</SectionEyebrow>
               <h2 data-testid="about-heading">Uma trajetória construída em <span>projetos, experiências e relações.</span></h2>
             </Reveal>
-            <div className="about-rule" />
-            <Reveal delay={0.1}>
-              <p data-testid="about-location-copy">Localizada estrategicamente na Zona Norte de São Paulo, a P4MIX atende os principais pavilhões e eventos da cidade — e projetos em todo o Brasil.</p>
-            </Reveal>
           </div>
           <div className="about-body">
             <Reveal>
@@ -430,19 +425,17 @@ function App() {
       </section>
 
       <section className="facility-section" data-testid="facility-section">
-        <div className="facility-image"><img src={images.facility} alt="Estrutura de produção para pré-montagem de projetos" data-testid="facility-image" /></div>
-        <div className="facility-content">
-          <Reveal>
-            <SectionEyebrow testId="facility-eyebrow">Por trás de cada entrega</SectionEyebrow>
-            <h2 data-testid="facility-heading">Experiência, cuidado e execução <span>em cada detalhe.</span></h2>
-            <p data-testid="facility-copy">Mais do que entregar um espaço, cuidamos de tudo o que acontece por trás dele. Da pré-montagem ao acompanhamento no evento, nossa equipe trabalha para que cada projeto chegue ao público como foi pensado.</p>
-            <div className="facility-metric" data-testid="facility-metric"><strong>1.000</strong><span>m² de estrutura para<br />pré-montagem</span></div>
-          </Reveal>
+        <div className="facility-top">
+          <div className="facility-image"><img src={images.facility} alt="Estande real montado pela P4MIX em pavilhão de feira" data-testid="facility-image" /></div>
+          <div className="facility-content">
+            <Reveal>
+              <SectionEyebrow testId="facility-eyebrow">Por trás de cada entrega</SectionEyebrow>
+              <h2 data-testid="facility-heading">Experiência, cuidado e execução <span>em cada detalhe.</span></h2>
+              <p data-testid="facility-copy">Mais do que entregar um espaço, cuidamos de tudo o que acontece por trás dele. Da pré-montagem ao acompanhamento no evento, nossa equipe trabalha para que cada projeto chegue ao público como foi pensado.</p>
+            </Reveal>
+          </div>
         </div>
-      </section>
-
-      <section className="values-section" data-testid="values-section">
-        <div className="container">
+        <div className="container facility-values" data-testid="values-section">
           <Reveal>
             <SectionEyebrow testId="values-eyebrow">Nossos valores</SectionEyebrow>
           </Reveal>
