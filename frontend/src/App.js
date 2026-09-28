@@ -44,6 +44,15 @@ const mirandinhaPhotos = [
   { src: "/projects/mirandinha-4.png", alt: "Estande Grupo Mirandinha — totem Fábrica de Celebrações" },
 ];
 
+const medlevPhotos = [
+  { src: "/projects/medlev-1.jpg", alt: "Estande MedLevensohn — vista geral com parede Diabetes Care e arco iluminado" },
+  { src: "/projects/medlev-2.jpg", alt: "Estande MedLevensohn — vista externa com arco verde neon e letreiro" },
+  { src: "/projects/medlev-3.jpg", alt: "Estande MedLevensohn — fachada com parede verde e neon da marca" },
+  { src: "/projects/medlev-4.jpg", alt: "Estande MedLevensohn — mezanino com painel EVOLUÇÃO" },
+  { src: "/projects/medlevensohn-mezanino.jpg", alt: "Estande MedLevensohn — escada de acesso ao segundo pavimento" },
+  { src: "/projects/medlev-6.jpg", alt: "Estande MedLevensohn — sala interna com identidade da marca" },
+];
+
 const projectGallery = [
   { src: "/projects/baloes-sao-roque-1.jpg", alt: "Estande Balões São Roque com balcão de atendimento e mesas de apoio" },
   { src: "/projects/baloes-sao-roque-2.jpg", alt: "Vista lateral do estande Balões São Roque com letreiro curvo" },
@@ -467,14 +476,32 @@ function App() {
             </div>
           </Reveal>
           <Reveal delay={0.1}>
+            <div className="strip-caption" data-testid="project-caption-medlev">
+              <span>03</span>
+              <div className="project-caption-info project-caption-dark">
+                <strong>MedLevensohn</strong>
+                <small>Hospitalar 2026 · 102 m² · São Paulo Expo</small>
+              </div>
+            </div>
             <div className="project-strip" data-testid="project-gallery">
-              {stripImages.map((photo, index) => (
-                <figure className="project-image project-strip-item" key={photo.src}>
+              {medlevPhotos.map((photo, index) => (
+                <figure className="project-image project-strip-item project-real" key={photo.src}>
                   <img src={photo.src} alt={photo.alt} loading="lazy" data-testid={`project-gallery-image-${index + 1}`} />
                 </figure>
               ))}
             </div>
           </Reveal>
+          {galleryImages && galleryImages.length > 0 && (
+            <Reveal delay={0.15}>
+              <div className="project-strip" data-testid="project-gallery-uploads">
+                {stripImages.map((photo, index) => (
+                  <figure className="project-image project-strip-item project-real" key={photo.src}>
+                    <img src={photo.src} alt={photo.alt} loading="lazy" data-testid={`project-upload-image-${index + 1}`} />
+                  </figure>
+                ))}
+              </div>
+            </Reveal>
+          )}
         </div>
       </section>
 
