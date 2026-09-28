@@ -5,6 +5,8 @@ import {
   ArrowUpRight,
   Building2,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   DraftingCompass,
   Instagram,
   Layers3,
@@ -27,9 +29,14 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const images = {
   hero: "/projects/medlevensohn-mezanino.jpg",
   facility: "/projects/servtherm-estande.jpg",
-  projectMain: "/projects/baloes-sao-roque-5.jpg",
   projectSecondary: "/projects/baloes-sao-roque-4.jpg",
 };
+
+const safraPhotos = [
+  { src: "/projects/safra-1.png", alt: "Estande Banco Safra — vista frontal com parede verde e totem ripado" },
+  { src: "/projects/safra-2.png", alt: "Estande Banco Safra — parede verde com logo e área de atendimento" },
+  { src: "/projects/safra-3.png", alt: "Estande Banco Safra — totem ripado com brasão e mesa de reunião" },
+];
 
 const projectGallery = [
   { src: "/projects/baloes-sao-roque-1.jpg", alt: "Estande Balões São Roque com balcão de atendimento e mesas de apoio" },
@@ -185,6 +192,7 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(() => window.location.hash === "#admin");
   const [galleryImages, setGalleryImages] = useState(null);
+  const [safraIndex, setSafraIndex] = useState(0);
   const { scrollY } = useScroll();
   const heroImageY = useTransform(scrollY, [0, 900], [0, 170]);
 
@@ -240,6 +248,8 @@ function App() {
   const stripImages = galleryImages && galleryImages.length > 0
     ? galleryImages.map((image) => ({ src: `${BACKEND_URL}${image.url}`, alt: image.original_filename || "Projeto P4MIX" }))
     : projectGallery;
+
+  const activeSafra = safraPhotos[safraIndex];
 
   return (
     <main className="site-shell" data-testid="p4mix-institutional-site">
@@ -407,7 +417,21 @@ function App() {
           </div>
           <Reveal>
             <div className="project-mosaic" data-testid="project-mosaic">
-              <figure className="project-image project-large"><img src={images.projectMain} alt="Estande Balões São Roque montado em pavilhão de feira" data-testid="project-image-main" /><figcaption><span>01</span> Estande Balões São Roque</figcaption></figure>
+              <figure className="project-image project-large project-carousel" data-testid="project-carousel-safra">
+                <img key={safraIndex} src={activeSafra.src} alt={activeSafra.alt} data-testid="project-image-main" />
+                <button type="button" className="carousel-nav carousel-prev" onClick={() => setSafraIndex((index) => (index - 1 + safraPhotos.length) % safraPhotos.length)} aria-label="Foto anterior do projeto" data-testid="carousel-prev-button">
+                  <ChevronLeft size={18} />
+                </button>
+                <button type="button" className="carousel-nav carousel-next" onClick={() => setSafraIndex((index) => (index + 1) % safraPhotos.length)} aria-label="Próxima foto do projeto" data-testid="carousel-next-button">
+                  <ChevronRight size={18} />
+                </button>
+                <div className="carousel-dots" data-testid="carousel-dots">
+                  {safraPhotos.map((photo, index) => (
+                    <button key={photo.src} type="button" className={`carousel-dot ${index === safraIndex ? "carousel-dot-active" : ""}`} onClick={() => setSafraIndex(index)} aria-label={`Ver foto ${index + 1} do projeto`} data-testid={`carousel-dot-${index + 1}`} />
+                  ))}
+                </div>
+                <figcaption><span>01</span><div className="project-caption-info"><strong>Banco Safra</strong><small>Congresso Brasileiro de Previdência Privada · 2022</small></div></figcaption>
+              </figure>
               <figure className="project-image project-small"><img src={images.projectSecondary} alt="Cenografia com escultura de balões e letreiro de neon no estande" data-testid="project-image-secondary" /><figcaption><span>02</span> Cenografia com balões</figcaption></figure>
               <div className="project-statement" data-testid="project-statement"><Sparkles size={21} /><p>Projetos pensados para <strong>fazer a marca acontecer.</strong></p></div>
             </div>
