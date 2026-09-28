@@ -373,7 +373,7 @@ function App() {
           <div className="process-intro">
             <Reveal>
               <SectionEyebrow light testId="process-eyebrow">Nosso jeito de fazer</SectionEyebrow>
-              <h2 data-testid="process-heading">Experiência que vai <em>além da montagem.</em></h2>
+              <h2 data-testid="process-heading">Experiência<br />que vai <em>além<br />da&nbsp;montagem.</em></h2>
               <p data-testid="process-copy">Cada projeto envolve escolhas, detalhes e decisões que fazem diferença no resultado. Por isso, acompanhamos de perto cada etapa, com uma equipe própria e um olhar atento do projeto à entrega.</p>
               <a className="text-link text-link-light" href="#processo" data-testid="process-link">Conheça nosso processo <MoveRight size={17} /></a>
             </Reveal>
